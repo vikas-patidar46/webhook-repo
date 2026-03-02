@@ -1,0 +1,154 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub Events</title>
+    <script>
+        async function fetchEvents() {
+            const res = await fetch("/events");
+            const data = await res.json();
+
+            const container = document.getElementById("events");
+            container.innerHTML = "";
+
+            data.forEach(event => {
+                let text = "";
+
+                if (event.action === "PUSH") {
+                    text = `${event.author} pushed to ${event.to_branch} on ${event.timestamp}`;
+                }
+
+                if (event.action === "PULL_REQUEST") {
+                    text = `${event.author} submitted a pull request from ${event.from_branch} to ${event.to_branch} on ${event.timestamp}`;
+                }
+
+                if (event.action === "MERGE") {
+                    text = `${event.author} merged branch ${event.from_branch} to ${event.to_branch} on ${event.timestamp}`;
+                }
+
+                const div = document.createElement("div");
+                div.innerText = text;
+                container.appendChild(div);
+            });
+        }
+
+        setInterval(fetchEvents, 15000);
+        fetchEvents();
+    </script>
+</head>
+<body>
+    <h2>Latest GitHub Events</h2>
+    <div id="events"></div>
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            padding: 40px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .event-card {
+            background: white;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: 0.2s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .author {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .branch {
+            background-color: #e3f2fd;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .timestamp {
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+    </style>
+
+    <script>
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString();
+        }
+
+        async function fetchEvents() {
+            const res = await fetch("/events");
+            const data = await res.json();
+
+            const container = document.getElementById("events");
+            container.innerHTML = "";
+
+            data.forEach(event => {
+                const div = document.createElement("div");
+                div.className = "event-card";
+
+                let text = "";
+
+                if (event.action === "PUSH") {
+                    text = `
+                        <span class="author">${event.author}</span> pushed to 
+                        <span class="branch">${event.to_branch}</span>
+                        <br>
+                        <span class="timestamp">${formatDate(event.timestamp)}</span>
+                    `;
+                }
+
+                if (event.action === "PULL_REQUEST") {
+                    text = `
+                        <span class="author">${event.author}</span> opened a pull request 
+                        from <span class="branch">${event.from_branch}</span> 
+                        to <span class="branch">${event.to_branch}</span>
+                        <br>
+                        <span class="timestamp">${formatDate(event.timestamp)}</span>
+                    `;
+                }
+
+                if (event.action === "MERGE") {
+                    text = `
+                        <span class="author">${event.author}</span> merged 
+                        <span class="branch">${event.from_branch}</span> 
+                        into <span class="branch">${event.to_branch}</span>
+                        <br>
+                        <span class="timestamp">${formatDate(event.timestamp)}</span>
+                    `;
+                }
+
+                div.innerHTML = text;
+                container.appendChild(div);
+            });
+        }
+
+        setInterval(fetchEvents, 15000);
+        fetchEvents();
+    </script>
+</head>
+<body>
+    <h2>🚀 Latest GitHub Events</h2>
+    <div id="events"></div>
+</body>
+</html>
